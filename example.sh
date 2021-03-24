@@ -2,22 +2,33 @@
 
 # Sets up example environment by clearing files/logs/db from previous run. 
 # Starts the ensemble manager in the background.
-# Returns PID of ensemble manager service so we can kill it at the end of the example
+# Saves the PID of ensemble manager service so we can kill it at the end of the example.
+#  The ensemble manager is a long running process and you will typically leave it running. 
 __setup() {
-    # clear existing db (just for this example) and create new one
-    rm -f ~/.pegasus/workflow.db
+    # Clear any files generated from a previous run of this example. This ensures
+    # that you may run this example multiple times in a consistent environment.
+    # In production, you would not remove any of the files created in ~/.pegasus/.
+    rm -f ~/.pegasus/workflow.db \
+        ~/.pegasus/ensembles/myruns/*.log \
+        ~/.pegasus/ensembles/myruns/*.plan* \
+        ./workflows/wf-will-fail/if.txt
+
+    # Setup a fresh instance of the pegasus database in ~/.pegasus/workflow.db. 
+    #  Typically, it is not needed to invoke this command as this database will
+    #  already exist with information from previous workflow runs. 
     pegasus-db-admin create
 
-    # setup: clearing files from previous runs
-    rm -f ~/.pegasus/ensembles/myruns/*.log \
-    ~/.pegasus/ensembles/myruns/*.plan* \
-    ./workflows/wf-will-fail/if.txt
-
-    # increase interval at which ensemble manager processes runs
+    # Ensemble manager configuration. This will specify the interval in seconds
+    # at which the ensemble manager polls its database for new work. By default
+    # this value is set to 60, but has been lowered to 5 specifically in this example
+    # so that we can observe the state changes that take place as workflows are
+    # added to an ensemble. In production, workflows can run for hours or days.
+    # As such, the default 60 second interval will not have a significant impact
+    # on the wall time of your worklfows. 
     echo "EM_INTERVAL = 5" >> ~/.pegasus/service.py
 
-    # start up ensemble manager in the background, give it a moment to fully start
-    # and return its PID
+    # Start up the ensemble manager in the background, and give it a moment to 
+    # fully start before progressing through the example usage script. 
     echo "Starting pegasus-ensemble manager in the background, see em_logs for logs"
     pegasus-em server --verbose --debug > em_logs 2>&1 &
     EM_PID=$!
