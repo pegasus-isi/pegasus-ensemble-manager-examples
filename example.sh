@@ -1,9 +1,6 @@
 #!/bin/bash 
 
 # Sets up example environment by clearing files/logs/db from previous run. 
-# Starts the ensemble manager in the background.
-# Saves the PID of ensemble manager service so we can kill it at the end of the example.
-#  The ensemble manager is a long running process and you will typically leave it running. 
 __setup() {
     # Clear any files generated from a previous run of this example. This ensures
     # that you may run this example multiple times in a consistent environment.
@@ -17,7 +14,12 @@ __setup() {
     #  Typically, it is not needed to invoke this command as this database will
     #  already exist with information from previous workflow runs. 
     pegasus-db-admin create
+}
 
+# Starts the ensemble manager in the background.
+# Saves the PID of ensemble manager service so we can kill it at the end of the example.
+#  The ensemble manager is a long running process and you will typically leave it running. 
+__start_ensemble_mgr() {
     # Ensemble manager configuration. This will specify the interval in seconds
     # at which the ensemble manager polls its database for new work. By default
     # this value is set to 60, but has been lowered to 5 specifically in this example
@@ -67,6 +69,7 @@ __teardown() {
 }
 
 __setup
+__start_ensemble_mgr
 ################################################################################
 ##### BEGIN EXAMPLE ENSEMBLE MANAGER USAGE #####################################
 ################################################################################
@@ -106,8 +109,7 @@ echo "Fixing failed workflow; re-running"
 echo "sample input" > workflows/wf-will-fail/if.txt
 pegasus-em rerun myruns.wf-1-will-fail
 
-# 11. observe failed workflow run to completion
-timeout --foreground 120 watch -n 1 pegasus-em workflows myruns
+timeout --foreground 240 watch -n 1 pegasus-em workflows myruns
 
 ################################################################################
 ##### END EXAMPLE ENSEMBLE MANAGER USAGE #######################################
