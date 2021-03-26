@@ -1,7 +1,7 @@
 # Pegasus Ensemble Manager Examples
 
 Provided are runnable examples which showcase usage of the 
-[Pegasus Ensemble Manager](). Each example file, `<num>_<example name>.sh`, 
+[Pegasus Ensemble Manager](https://pegasus.isi.edu/documentation/reference-guide/pegasus-service.html#ensemble-manager). Each example file, `<num>_<example name>.sh`, 
 will run a set of  `pegasus-em` commands, which illustrate the usage of this tool. 
 
 Each script begins by starting up the ensemble manager in the background and
