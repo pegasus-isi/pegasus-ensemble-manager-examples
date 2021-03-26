@@ -5,9 +5,9 @@ __setup() {
     # Clear any files generated from a previous run of this example. This ensures
     # that you may run this example multiple times in a consistent environment.
     # In production, you would not remove any of the files created in ~/.pegasus/.
-    rm -f ~/.pegasus/workflow.db \
-        ~/.pegasus/ensembles/myruns/*.log \
-        ~/.pegasus/ensembles/myruns/*.plan*
+    rm -rf /home/scitech/.pegasus/workflow.db \
+        /home/scitech/.pegasus/ensembles \
+        /home/scitech/workflows
 
     # Setup a fresh instance of the pegasus database in ~/.pegasus/workflow.db. 
     #  Typically, it is not needed to invoke this command as this database will
@@ -26,7 +26,7 @@ __start_ensemble_mgr() {
     # added to an ensemble. In production, workflows can run for hours or days.
     # As such, the default 60 second interval will not have a significant impact
     # on the wall time of your worklfows. 
-    echo "EM_INTERVAL = 5" >> ~/.pegasus/service.py
+    echo "EM_INTERVAL = 5" >> /home/scitech/.pegasus/service.py
 
     # Start up the ensemble manager in the background, and give it a moment to 
     # fully start before progressing through the example usage script. 

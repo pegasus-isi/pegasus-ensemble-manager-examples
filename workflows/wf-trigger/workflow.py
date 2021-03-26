@@ -85,7 +85,7 @@ if __name__=="__main__":
     combine = Transformation(
                     "combine",
                     site="local",
-                    pfn=(Path(".")/"combine.py").resolve(),
+                    pfn=Path(__file__).parent.resolve() / "combine.py",
                     is_stageable=True
                 )
 
